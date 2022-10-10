@@ -71,6 +71,6 @@ leaflet() %>%
 leaflet() %>% 
   setView(lng = -117.25, lat = 33.89, zoom = 12) %>% 
   addTiles() %>% 
-  addProviderTiles(provider = providers$HERE.trafficFlow)
+  addProviderTiles(provider = providers$USGS.USImageryTopo)
 
                  
