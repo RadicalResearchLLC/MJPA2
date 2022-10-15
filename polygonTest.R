@@ -6,8 +6,8 @@ library(sf)
 library(tidyverse)
 library(leaflet)
 
+##Bloomington Project
 #building 1 - bottom right - 710k sq.ft.
-
 b1 <- rbind(c(-117.400892, 34.052100), 
             c(-117.400926, 34.048686),
             c(-117.404977, 34.048708),
@@ -48,13 +48,6 @@ pol3 <- st_sf(name = 'Bloomington 3', geom = st_sfc(st_polygon(list(mp3))), crs 
 pol4 <- st_sf(name = 'Bloomington 4', geom = st_sfc(st_polygon(list(mp4))), crs = crs)
 
 bloom_proj <- rbind(pol1, pol2, pol3, pol4)
-
-#ggplot() +
-#  geom_sf(data = bloom_proj)
-
-leaflet() %>% 
-  addTiles() %>% 
-  addPolygons(data = bloom_proj)
 
 ## Sycamore Canyon warehouses
 # Warehouse 1 - 200k sq. ft. above mini-storage
@@ -168,24 +161,10 @@ WCUP10 <- st_sf(name = 'West Campus reg 7', geom = st_sfc(st_polygon(list(wcup_R
 WCUP <- rbind(WCUP1, WCUP2, WCUP3, WCUP4, WCUP5, WCUP6, WCUP7, WCUP8, WCUP9, WCUP10)
 
 
-#projects <- data.frame(buildings, option)
-#projects$geometry <- st_sfc(geo_test, sf_column_name = 'geometry', epsg = 4326)
-#st_sfc()
-#projects_sf <- st_as_sf(projects)
-
-
-leaflet() %>% 
-  addTiles() %>% 
-  addPolygons(data = WCUP, color = 'red',
-              stroke = FALSE, fillOpacity = 0.5) %>% 
-  addPolygons(data = Syc_WH, color = 'red',
-              stroke = FALSE, fillOpacity = 0.5)
-
-  #st_transform("+proj=longlat +ellps=WGS84 +datum=WGS84") 
-
 rm(ls = wcup_RW1, wcup_RW2, wcup_RW3, wcup_RW4,
    wcup_RW5, wcup_RW6, wcup_RW7, WCUP_MW1, WCUP_MW2, WCUP_MW3)
 rm(ls = sc1, sc2, Syc1, Syc2, pol1, pol2, pol3, pol4, VB1)
 rm(ls = b1, b2, b3, b4)
 rm(ls = WCUP1, WCUP2, WCUP3, WCUP4,
    WCUP5, WCUP6, WCUP7, WCUP8, WCUP9, WCUP10)
+rm(crs, polSC1, polSC2, VB)
