@@ -13,14 +13,14 @@ b1 <- rbind(c(-117.400892, 34.052100),
             c(-117.404977, 34.048708),
             c(-117.404999, 34.052125),
             c(-117.400892, 34.052100))
-(mp1 <- st_multipoint(b1))
+
 #building 2 - middle - 1.25M sq.ft.
 b2 <- rbind(c(-117.409354, 34.054098),
             c(-117.405195, 34.054019),
             c(-117.405206, 34.048729),
             c(-117.409350, 34.048681),
             c(-117.409354, 34.054098))
-(mp2 <- st_multipoint(b2))
+
 #building 3 - left - 750k sq.ft.
 b3 <- rbind(c(-117.41379, 34.05580),
             c(-117.4096,   34.05580),
@@ -28,7 +28,6 @@ b3 <- rbind(c(-117.41379, 34.05580),
             c(-117.41379,  34.052210),
             c(-117.41379,  34.05580))
 
-(mp3 <- st_multipoint(b3))
 b4 <- rbind(c(-117.4139, 34.055779),
             c(-117.416015, 34.055779),
             c(-117.416015, 34.048702),
@@ -40,12 +39,12 @@ b4 <- rbind(c(-117.4139, 34.055779),
             c(-117.40955, 34.05217),
             c(-117.4139, 34.05217),
             c(-117.4139, 34.055779))
-(mp4 <- st_multipoint(b4))
+
 crs <- st_crs(4326)
-pol1 <- st_sf(name = 'Bloomington 1', geom = st_sfc(st_polygon(list(mp1))), crs = crs)
-pol2 <- st_sf(name = 'Bloomington 2', geom = st_sfc(st_polygon(list(mp2))), crs = crs)
-pol3 <- st_sf(name = 'Bloomington 3', geom = st_sfc(st_polygon(list(mp3))), crs = crs)
-pol4 <- st_sf(name = 'Bloomington 4', geom = st_sfc(st_polygon(list(mp4))), crs = crs)
+pol1 <- st_sf(name = 'Bloomington 1', geom = st_sfc(st_polygon(list(b1))), crs = crs)
+pol2 <- st_sf(name = 'Bloomington 2', geom = st_sfc(st_polygon(list(b2))), crs = crs)
+pol3 <- st_sf(name = 'Bloomington 3', geom = st_sfc(st_polygon(list(b3))), crs = crs)
+pol4 <- st_sf(name = 'Bloomington 4', geom = st_sfc(st_polygon(list(b4))), crs = crs)
 
 bloom_proj <- rbind(pol1, pol2, pol3, pol4)
 
@@ -61,7 +60,7 @@ sc1 <- rbind(c(-117.313744, 33.918513),
              c(-117.312206, 33.920296),
              c(-117.313835, 33.91987),
              c(-117.313744, 33.918513))
-polSC1 <- st_polygon(list(sc1))
+
 sc2 <- rbind(c(-117.310387, 33.917642),
              c(-117.30967, 33.920514),
              c(-117.309896, 33.921082),
@@ -70,18 +69,40 @@ sc2 <- rbind(c(-117.310387, 33.917642),
              c(-117.3077, 33.9205),
              c(-117.30745, 33.918026),
              c(-117.310387, 33.917642))
-polSC2 <- st_polygon(list(sc2))
+
 VB <- rbind(c(-117.26336, 33.88068),
             c(-117.26499, 33.87962),
             c(-117.26698, 33.88069),
             c(-117.262535, 33.87028), 
             c(-117.255926, 33.87019),
             c(-117.26336, 33.88068))
+SoCam1 <- rbind(c(-117.31376, 33.88484),
+                c(-117.31142, 33.88484),
+                c(-117.31142, 33.88228),
+                c(-117.31376, 33.88228),
+                c(-117.31376, 33.88484))
+SoCam2 <- rbind(c(-117.31373, 33.8850),
+                c(-117.31142, 33.8850),
+                c(-117.31153, 33.8875),
+                c(-117.31209, 33.88754),
+                c(-117.31373, 33.88754),
+                c(-117.31373, 33.8850))
+SoCam3 <- rbind(c(-117.29843, 33.88159),
+                c(-117.29843, 33.88326),
+                c(-117.29753, 33.88326),
+                c(-117.29609, 33.88397),
+                c(-117.29506, 33.88395),
+                c(-117.29403, 33.88366),
+                c(-117.29403, 33.88159),
+                c(-117.29843, 33.88159))
 
 Syc1 <- st_sf(name = 'Sycamore Canyon 1', geom = st_sfc(st_polygon(list(sc1))), crs = crs)
 Syc2 <- st_sf(name = 'Sycamore Canyon 2', geom = st_sfc(st_polygon(list(sc2))), crs = crs)
 VB1 <- st_sf(name = 'Veterans Industrial Park 1', geom = st_sfc(st_polygon(list(VB))), crs = crs)
-Syc_WH <- rbind(Syc1, Syc2, VB1)
+SoCamp1 <- st_sf(name = 'South Campus Reg1', geom = st_sfc(st_polygon(list(SoCam1))), crs = crs)
+SoCamp2 <- st_sf(name = 'South Campus Reg2', geom = st_sfc(st_polygon(list(SoCam2))), crs = crs)
+SoCamp3 <- st_sf(name = 'South Campus Reg3', geom = st_sfc(st_polygon(list(SoCam3))), crs = crs)
+WH_uCons <- rbind(Syc1, Syc2, VB1, SoCamp1, SoCamp2, SoCamp3)
 
 WCUP_MW1 <- rbind(c(-117.312157, 33.90384),
                   c(-117.305518, 33.90384),
@@ -168,3 +189,4 @@ rm(ls = b1, b2, b3, b4)
 rm(ls = WCUP1, WCUP2, WCUP3, WCUP4,
    WCUP5, WCUP6, WCUP7, WCUP8, WCUP9, WCUP10)
 rm(crs, polSC1, polSC2, VB)
+rm(SoCam1, SoCam2, SoCam3, SoCamp1, SoCamp2, SoCamp3)

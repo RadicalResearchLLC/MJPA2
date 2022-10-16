@@ -92,13 +92,13 @@ observe({
 })
 #under construction warehouses
 observe({
-  leafletProxy("map", data = Syc_WH) %>%
+  leafletProxy("map", data = WH_uCons) %>%
     clearGroup(group = 'Under construction warehouses') %>%
     addPolygons(stroke = TRUE,
                 weight = 2,
                 color = 'red',
                 fillOpacity = 0.5,
-                label = ~htmlEscape(name),
+                label = ~htmlEscape(paste(name, floorSpace.sq.ft, 'sq.ft.')),
                 group = 'Under construction warehouses')
 })
 
@@ -111,7 +111,7 @@ observe({
                 weight = 2,
                 color = 'red', 
                 fillOpacity = 0.5,
-                label = ~htmlEscape(name),
+                label = ~htmlEscape(paste(name, floorSpace.sq.ft, 'sq.ft.')),
                 group = 'West Campus Upper Plateau')
 })
 

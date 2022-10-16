@@ -28,17 +28,35 @@ warehouses <- st_read(WH.url) %>%
   filter(county == 'Riverside')
 
 warehouses_narrow <- warehouses %>% 
-  select(apn, geometry) %>% 
-  rename(name = apn, geom = geometry)
+  select(apn, geometry, floorSpace.sq.ft) %>% 
+  rename(name = apn, geom = geometry) %>% 
+  mutate(type = 'existing') %>% 
+  select(name, type, floorSpace.sq.ft, geom)
 
+WCUP$shape <- st_area(WCUP)
 
+WCUP <- WCUP %>% 
+  mutate(type = 'WCUP',
+         floorSpace.sq.ft = round(as.numeric(0.5*10.764*shape),0)) %>% 
+  select(-shape) 
 
-buff_proj_1000 <- WCUP %>% 
-  rbind(Syc_WH) %>% 
+WH_uCons$shape <- st_area(WH_uCons)
+
+WH_uCons <- WH_uCons %>% 
+  mutate(type = 'under construction',
+         floorSpace.sq.ft = round(as.numeric(0.5*10.764*shape), 0)) %>% 
+  select(-shape) 
+
+JPA <- bind_rows(WCUP, WH_uCons) #%>% 
+
+names(JPA)
+names(warehouses_narrow)  
+
+buff_proj_1000 <- JPA %>% 
   rbind(warehouses_narrow) %>% 
   st_buffer(dist = 304)
-buff_proj_800 <- WCUP %>%
-  rbind(Syc_WH) %>% 
+
+buff_proj_800 <- JPA %>%
   rbind(warehouses_narrow) %>% 
   st_buffer(dist = 243.8)
 
@@ -80,7 +98,7 @@ leaflet() %>%
               group = 'Existing warehouses',
               label = ~htmlEscape(paste('Parcel', apn, ';', 
                 round(shape_area,0), 'sq.ft.', class, year_chr))) %>%
-  addPolygons(data = Syc_WH,
+  addPolygons(data = WH_uCons,
               stroke = TRUE,
               weight = 2,
               color = 'red',
