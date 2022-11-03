@@ -1,8 +1,7 @@
-## This is an alpha version of Warehouse CITY, a community mapping tool for warehouse impacts
+## This is an alpha version of March JPA warehouse map, a community mapping tool for warehouse impacts
 ## Authored by Mike McCarthy, Radical Research LLC
-## Thanks to Sean Raffuse at UC Davis AQRC for help with the nearby intersection code for great circles 
-## First created May, 2022
-## Last modified October, 2022
+## First created September, 2022
+## Last modified Novemober, 2022
 #
 
 library(shiny)
@@ -29,7 +28,7 @@ ui <- fluidPage(title = 'RNOW March JPA Warehouse Map',
     tabPanel('Dashboard',
     # Display slider bar selections, checkbox, and summary text
     fluidRow(
-        column(width = 12, align = 'center', leafletOutput("map", height = 800))
+        column(width = 10, align = 'center', leafletOutput("map", height = 700))
         )
       ),
     tabPanel('Readme',
@@ -52,90 +51,76 @@ output$map <- renderLeaflet({
     addTiles() %>% 
     addProviderTiles(provider = providers$Esri.WorldImagery, 
                      group = 'Imagery') %>% 
+    setView(lng = -117.24, lat = 33.875, zoom = 12) %>% 
     addLayersControl(baseGroups = c('Basemap', 'Imagery'),
-                     overlayGroups = c('City boundaries', 'MJPA boundary',
-                                       'Existing warehouses',
-                                       'Under construction warehouses',
-                                       'West Campus Upper Plateau',
-                                       '800 foot buffer - City policy',
-                                       '1000 foot buffer - WRCOG GNG'),
-                     options = layersControlOptions(collapsed = FALSE)) %>% 
-    hideGroup(c('800 foot buffer - City policy',
-                '1000 foot buffer - WRCOG GNG')) %>% 
-    setView(lng = -117.27, lat = 33.88, zoom = 13) %>% 
-    addPolygons(data = cities,
-                stroke = TRUE,
-                color = 'blue',
-                fillOpacity = 0,
-                weight = 3,
-                group = 'City boundaries',
-                label = ~htmlEscape(city.name)
-    )  %>% 
-    addPolygons(data = MJPA,
-                stroke = TRUE,
-                color = 'black',
-                weight = 5,
-                fillOpacity = 0, 
-                group = 'MJPA boundary')
-    })
+                     overlayGroups = c('Jurisdictions', 
+                                       'Existing Warehouses',
+                                       'Planned Warehouses',
+                                       '800 foot buffer'),
+                     options = layersControlOptions(collapsed = FALSE)
+    ) %>% 
+    hideGroup(c('800 foot buffer', 'Jurisdictions')) %>% 
+    addMapPane('Jurisdictions', zIndex = 390) %>% 
+    addMapPane('800 foot buffer', zIndex = 395) %>% 
+    addMapPane('Existing Warehouses', zIndex = 410) %>% 
+    addMapPane('Planned Warehouses', zIndex = 420) %>% 
+    addPolygons(data = jurisdictions,
+                color = ~palJuris(name),
+                stroke = FALSE,
+                fillOpacity = 0.4,
+                label = ~htmlEscape(name),
+                group = 'Jurisdictions',
+                options = pathOptions(pane = 'Jurisdictions')) %>% 
+    addLegend(data = warehouses_tidy,
+              pal = palWarehouseJuris,
+              title = 'Jurisdiction',
+              values = ~(jurisdiction))
+})
 
 #Existing warehouses
 observe({
-  leafletProxy("map", data = warehouses) %>%
+  leafletProxy("map", data = warehouses_tidy) %>% 
     clearGroup(group = 'Existing warehouses') %>%
-    addPolygons(stroke = FALSE,
-                color = 'red',
-                fillOpacity = 0.5,
-                group = 'Existing warehouses',
-                label = ~htmlEscape(paste('Parcel', apn, ';', 
-                                          round(shape_area,0), 'sq.ft.', class, year_chr)))
-})
-#under construction warehouses
-observe({
-  leafletProxy("map", data = WH_uCons) %>%
-    clearGroup(group = 'Under construction warehouses') %>%
-    addPolygons(stroke = TRUE,
-                weight = 2,
-                color = 'red',
-                fillOpacity = 0.5,
-                label = ~htmlEscape(paste(name, floorSpace.sq.ft, 'sq.ft.')),
-                group = 'Under construction warehouses')
-})
-
-#West Campus Proposal
-observe({
-  leafletProxy("map", data = WCUP ) %>%
-    clearGroup(group = 'West Campus Upper Plateau') %>%
-    addPolygons(data = WCUP, 
+    addPolygons(data = warehouses_tidy,
+                color = ~palWarehouseJuris(jurisdiction),
+                fillColor = 'gray',
                 stroke = TRUE,
                 weight = 2,
-                color = 'red', 
-                fillOpacity = 0.5,
-                label = ~htmlEscape(paste(name, floorSpace.sq.ft, 'sq.ft.')),
-                group = 'West Campus Upper Plateau')
+                fillOpacity = 0.6,
+                group = 'Existing Warehouses',
+                label = ~htmlEscape(paste(jurisdiction, name, 
+                                          type, round(floorSpace.sq.ft,0), 'sq.ft.')),
+                options = pathOptions(pane = 'Existing Warehouses'))
+})
+
+#Planned warehouses
+observe({
+  leafletProxy("map", data = JPA) %>%
+    clearGroup(group = 'Planned Warehouses') %>%
+    addPolygons(data = JPA,
+                color = ~palWarehouseJuris(jurisdiction),
+                fillColor = 'gray',
+                stroke = TRUE,
+                weight = 2,
+                fillOpacity = 0.6,
+                group = 'Planned Warehouses',
+                label = ~htmlEscape(paste(name, 
+                                          type, round(floorSpace.sq.ft,0), 'sq.ft.')),
+                options = pathOptions(pane = 'Planned Warehouses')
+    )
 })
 
 #Buffer 800 feet
 
 observe({
   leafletProxy("map", data = buff_proj_800) %>%
-    clearGroup(group = '800 foot buffer - City policy') %>%
+    clearGroup(group = '800 foot buffer') %>%
     addPolygons(data = buff_proj_800,
+                color = 'grey',
                 stroke = FALSE,
-                color = 'brown',
-                fillOpacity = 0.3,
-                group = '800 foot buffer - City policy')
-})
-
-#Buffer 1000 feet
-observe({
-  leafletProxy("map", data = buff_proj_1000) %>%
-    clearGroup(group = '1000 foot buffer - WRCOG GNG') %>%
-    addPolygons(data = buff_proj_1000,
-                stroke = FALSE,
-                color = 'brown',
-                fillOpacity = 0.3,
-                group = '1000 foot buffer - WRCOG GNG')
+                fillOpacity = 0.7,
+                group = '800 foot buffer',
+                options = pathOptions(pane = '800 foot buffer'))
 })
 
 }
