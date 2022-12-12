@@ -4,12 +4,13 @@ library(sf)
 library(leaflet)
 library(tidyverse)
 library(htmltools)
+library(leaflet.extras)
 
 wd <- getwd()
 MJPA_dir <- paste0(wd, '/boundary/')
 cities_dir <- paste0(wd, '/Cities')
 app_dir <- paste0(wd, '/MarchJPA')
-
+city_receptors <- paste0(wd, '/City_Sensitive_receptors')
 
 source('polygonTest.R')
 
@@ -27,30 +28,32 @@ RivCO_cdp <- read_sf(dsn = 'C:/Dev/MJPA2/RivCo_CDP/Census_2010_Designated_Places
   st_transform("+proj=longlat +ellps=WGS84 +datum=WGS84") %>% 
   filter(PLACE_NAME %in% c('Mead Valley', 'March ARB'))  
 
-WH.url <- 'https://raw.githubusercontent.com/RadicalResearchLLC/WarehouseMap/main/WarehouseCITY/geoJSON/warehouse.geoJSON'
+WH.url <- 'https://raw.githubusercontent.com/RadicalResearchLLC/WarehouseMap/main/WarehouseCITY/geoJSON/finalParcels.geojson'
 warehouses <- st_read(WH.url) %>% 
   st_transform("+proj=longlat +ellps=WGS84 +datum=WGS84") %>% 
   filter(county == 'Riverside')
 
 warehouses_narrow <- warehouses %>% 
-  select(apn, geometry, floorSpace.sq.ft) %>% 
-  rename(name = apn, geom = geometry) %>% 
+  select(apn, geometry, floorSpace.sq.ft, shape_area) %>% 
+  rename(name = apn, geom = geometry, area = shape_area) %>% 
   mutate(type = 'existing') %>% 
-  select(name, type, floorSpace.sq.ft, geom) %>% 
+  select(name, type, floorSpace.sq.ft, geom, area ) %>% 
   mutate(jurisdiction = '')
 
 WCUP$shape <- st_area(WCUP)
 
 WCUP <- WCUP %>% 
   mutate(type = 'WCUP',
-         floorSpace.sq.ft = round(as.numeric(0.5*10.764*shape),0)) %>% 
+         floorSpace.sq.ft = round(as.numeric(0.5*10.764*shape),0),
+         area = round(as.numeric(10.764*shape), 0)) %>% 
   select(-shape) 
 
 WH_uCons$shape <- st_area(WH_uCons)
 
 WH_uCons <- WH_uCons %>% 
   mutate(type = 'under construction',
-         floorSpace.sq.ft = round(as.numeric(0.5*10.764*shape), 0)) %>% 
+         floorSpace.sq.ft = round(as.numeric(0.5*10.764*shape), 0),
+         area = round(as.numeric(10.764*shape), 0)) %>% 
   select(-shape) 
 
 JPA <- bind_rows(WCUP, WH_uCons) %>%
@@ -135,6 +138,13 @@ buff_proj_800 <- JPA %>%
   rbind(warehouses_tidy) %>% 
   st_buffer(dist = 243.8)
 
+receptors <- sf::st_read(dsn = city_receptors)
+leaflet() %>% 
+  addTiles() %>% 
+  addWebGLHeatmap(data = receptors, size = 200, units = 'm',
+                  opacity = 0.3, intensity = 1)
+
+
 palJuris <- colorFactor(palette = c('red', 'orange', 'brown', 'blue', 'gold'), 
                         domain = jurisdictions$name)
 palWarehouseJuris <- colorFactor(palette = c('red', 'orange', 'brown', 'blue', 'gold'), 
@@ -148,7 +158,8 @@ leaflet() %>%
                    overlayGroups = c('Jurisdictions', 
                                      'Existing Warehouses',
                                      'Planned Warehouses',
-                                     '800 foot buffer'),
+                                     '800 foot buffer',
+                                     'Residential'),
                    options = layersControlOptions(collapsed = FALSE)
                    ) %>% 
   hideGroup(c('800 foot buffer', 'Jurisdictions')) %>% 
@@ -194,7 +205,9 @@ leaflet() %>%
             values = ~(jurisdiction))
 
 rm(ls = warehouses_narrow, juris_warehouses, warehouses, WCUP, bloom_proj, WH_uCons)
-  
+
+setwd(wd)
+save.image('.RData')
 setwd(app_dir)
 save.image('.RData')
 
