@@ -12,7 +12,7 @@ Five land-use authorities contribute to the warehouses around the March ARB.
 -   City of [Moreno Valley](https://moval.gov/index.shtml) - Over 75 warehouse along Cactus Avenue and along Indian Street near the March ARB. (\~39M sq.ft.)
 -   City of [Perris](https://www.cityofperris.org/) - Over 75 warehouses along Perris Blvd. and Ramona Expressway (\~44M sq.ft.)
 -   [Riverside County](https://rivco.org/) - Over 45 warehouses, mostly alongside the 215 Corridor South of Riverside National Cemetary (\~14M sq.ft.).
--   [March Joint Powers Authority](https://marchjpa.com/) - About 45 warehouses, directly adjacent to March ARB, along Van Buren, and along the 215 Corridor between Alessandro and Van Buren (\~23M sq.ft.).
+-   [March Joint Powers Authority](https://marchjpa.com/) - About 55 warehouses, directly adjacent to March ARB, along Van Buren, and along the 215 Corridor between Alessandro and Van Buren (\~27M sq.ft.).
 
 The March Joint Powers Authority (MJPA) is a quasi-governmental land-use authority that is comprised of [eight commissioners](https://marchjpa.com/about/march-joint-powers-commission/) from the four governmental agencies. Two commissioners are from each of the cities (Moreno Valley, Perris, Riverside) and another two are from the County.
 
