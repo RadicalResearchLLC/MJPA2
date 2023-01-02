@@ -140,9 +140,9 @@ SoCam8 <- rbind(c(-117.2938, 33.88127),
                 c(-117.29376, 33.88075),
                 c(-117.2938, 33.88127))
 
-Syc1 <- st_sf(name = 'Sycamore Canyon 1', geom = st_sfc(st_polygon(list(sc1))), crs = crs)
-Syc2 <- st_sf(name = 'Sycamore Canyon 2', geom = st_sfc(st_polygon(list(sc2))), crs = crs)
-VB1 <- st_sf(name = 'Veterans Industrial Park 1', geom = st_sfc(st_polygon(list(VB))), crs = crs)
+Syc1 <- st_sf(name = 'Sycamore Hills Distribution Center Bldg 1', geom = st_sfc(st_polygon(list(sc1))), crs = crs)
+Syc2 <- st_sf(name = 'Sycamore Hills Distribution Center Bldg 2', geom = st_sfc(st_polygon(list(sc2))), crs = crs)
+VB1 <- st_sf(name = "Veteran's Industrial Park", geom = st_sfc(st_polygon(list(VB))), crs = crs)
 SoCamp1 <- st_sf(name = 'South Campus Reg 1', geom = st_sfc(st_polygon(list(SoCam1))), crs = crs)
 SoCamp2 <- st_sf(name = 'South Campus Bldg. F and G', geom = st_sfc(st_polygon(list(SoCam2))), crs = crs)
 SoCamp3 <- st_sf(name = 'South Campus Reg3', geom = st_sfc(st_polygon(list(SoCam3))), crs = crs)
@@ -284,7 +284,7 @@ SPerris <- rbind(c(-117.21718, 33.7791),
                  c(-117.2103, 33.77915),
                  c(-117.21718, 33.7791))
 
-SPerris1 <- st_sf(name = 'South Perris Industrial', geom = st_sfc(st_polygon(list(SPerris))), crs = crs)
+SPerris1 <- st_sf(name = 'South Perris Industrial Project', geom = st_sfc(st_polygon(list(SPerris))), crs = crs)
 
 MValTC1 <- rbind(c(-117.15697, 33.93539),
                  c(-117.15697, 33.93203),
@@ -298,7 +298,7 @@ RiderPat1 <- rbind(c(-117.25714, 33.830075),
                    c(-117.25285, 33.82667),
                    c(-117.25289, 33.83015),
                    c(-117.25714, 33.830075))
-RiderPat <- st_sf(name = 'Rider&Patterson Business Center', geom = st_sfc(st_polygon(list(RiderPat1))), crs = crs)
+RiderPat <- st_sf(name = 'Rider and Patterson Business Center', geom = st_sfc(st_polygon(list(RiderPat1))), crs = crs)
 KnoxBP1D <- rbind(c(-117.27, 33.85878),
                   c(-117.27, 33.85566),
                   c(-117.2658, 33.85566),
@@ -379,20 +379,20 @@ SeatonCajalco1 <- rbind(c(-117.2615, 33.83725),
                         c(-117.25947, 33.83412),
                         c(-117.26153, 33.83412),
                         c(-117.2615, 33.83725))
-SeatonCajalcoIP <-  st_sf(name = 'Seaton and Cajalco Industrial park', geom = st_sfc(st_polygon(list(SeatonCajalco1))), crs = crs)
+SeatonCajalcoIP <-  st_sf(name = 'Seaton and Cajalco Industrial Project', geom = st_sfc(st_polygon(list(SeatonCajalco1))), crs = crs)
 PerrisCC1 <- rbind(c(-117.23022, 33.84434),
                    c(-117.22634, 33.84434),
                    c(-117.22634, 33.84283),
                    c(-117.23041, 33.84286),
                    c(-117.23022, 33.84357),
                    c(-117.23022, 33.84434))
-PerrisCC <- st_sf(name = 'Perris Commerce Center', geom = st_sfc(st_polygon(list(PerrisCC1))), crs = crs)
+PerrisCC <- st_sf(name = 'Perris Valley Commerce Center', geom = st_sfc(st_polygon(list(PerrisCC1))), crs = crs)
 HarvillRider1 <- rbind(c(-117.24768, 33.8336),
                        c(-117.24641, 33.8306),
                        c(-117.24869, 33.8306),
                        c(-117.24992, 33.8336),
                        c(-117.24768, 33.8336))
-HarvillRider <- st_sf(name = 'Harvill & Rider' , geom = st_sfc(st_polygon(list(HarvillRider1))), crs = crs)
+HarvillRider <- st_sf(name = 'Harvill and Rider' , geom = st_sfc(st_polygon(list(HarvillRider1))), crs = crs)
 RedlandsAveWest <- rbind(c(-117.22135, 33.8281),
                          c(-117.217525, 33.8281),
                          c(-117.217525, 33.82586),
@@ -406,7 +406,7 @@ PerrisMorganIPP1 <- rbind(c(-117.23039, 33.83726),
                             c(-117.22715, 33.83639),
                             c(-117.23039, 33.83639),
                             c(-117.23039, 33.83726))
-PerrisMorganIPP <- st_sf(name = 'Perris Blvd Morgan St Industrial Park Project' , 
+PerrisMorganIPP <- st_sf(name = 'Perris Morgan Industrial Park Project' , 
                          geom = st_sfc(st_polygon(list(PerrisMorganIPP1))), crs = crs)
 PlacentiaLP1 <- rbind(c(-117.24923, 33.82491),
                       c(-117.2467, 33.82491),
@@ -421,7 +421,7 @@ RedlandsAveEastIP1 <- rbind(c(-117.21728, 33.82712),
                             c(-117.21521, 33.82487),
                             c(-117.21728, 33.82487),
                             c(-117.21728, 33.82712))
-RedlandsAveEastIP <- st_sf(name = 'Redland Ave East Industrial Project', 
+RedlandsAveEastIP <- st_sf(name = 'Redlands Ave East Industrial Project', 
                      geom = st_sfc(st_polygon(list(RedlandsAveEastIP1))), crs = crs)
 MuranakaWP1 <- rbind(c(-117.26999, 33.86246),
                      c(-117.26672, 33.86246),
@@ -511,13 +511,79 @@ Old215BP1 <- rbind(c(-117.28835, 33.92423),
                    c(-117.28835, 33.92423))
 Old215BP <- st_sf(name = 'Old 215 Business Park Project', 
                  geom = st_sfc(st_polygon(list(Old215BP1))), crs = crs)
+MarlboroughNGLI1 <- rbind(c(-117.3333, 33.99743),
+                         c(-117.33112, 33.99741),
+                         c(-117.33112, 33.99636),
+                         c(-117.33174, 33.99636),
+                         c(-117.333, 33.99679),
+                         c(-117.3333, 33.99679),
+                         c(-117.3333, 33.99743))
+MarlboroughNGLI <- st_sf(name = 'Marlborough Northgate Warehouse', 
+                  geom = st_sfc(st_polygon(list(MarlboroughNGLI1))), crs = crs)
+Phelan1 <- rbind(c(-117.24373, 33.8554),
+                 c(-117.24261, 33.8554),
+                 c(-117.24261, 33.85374),
+                 c(-117.24373, 33.85374),
+                 c(-117.24373, 33.8554))
+Phelan <- st_sf(name = 'Phelan Warehouse', 
+                         geom = st_sfc(st_polygon(list(Phelan1))), crs = crs)
+SeatonPerry1 <- rbind(c(-117.26581, 33.85005),
+                      c(-117.26162, 33.85005),
+                      c(-117.26162, 33.84926),
+                      c(-117.26581, 33.84926),
+                      c(-117.26581, 33.85005))
+SeatonPerry <- st_sf(name = 'Seaton and Perry Industrial Project', 
+                geom = st_sfc(st_polygon(list(SeatonPerry1))), crs = crs)
+MajesticFreeway17 <- rbind(c(-117.26124, 33.85719),
+                              c(-117.25804, 33.85721),
+                              c(-117.25734, 33.85563),
+                              c(-117.26124, 33.85565),
+                              c(-117.26124, 33.85719))
+MajesticFreewayBP17 <- st_sf(name = 'Majestic Freeway Business Park 17', 
+                             geom = st_sfc(st_polygon(list(MajesticFreeway17))), crs = crs)
+MajesticFreeway18 <- rbind(c(-117.2637, 33.85877),
+                           c(-117.26296, 33.85877),
+                           c(-117.26296, 33.8579),
+                           c(-117.2616, 33.8579),
+                           c(-117.2616, 33.85565),
+                           c(-117.2637, 33.85565),
+                           c(-117.2637, 33.85877))
+MajesticFreewayBP18 <- st_sf(name = 'Majestic Freeway Business Park 18', 
+                             geom = st_sfc(st_polygon(list(MajesticFreeway18))), crs = crs)
+MajesticFreeway14 <- rbind(c(-117.26132, 33.85055),
+                           c(-117.25957, 33.85055),
+                           c(-117.25879, 33.85076),
+                           c(-117.25737, 33.84848),
+                           c(-117.2613, 33.84848),
+                           c(-117.26132, 33.85055))
+MajesticFreewayBP14 <- st_sf(name = 'Majestic Freeway Business Park 14', 
+                             geom = st_sfc(st_polygon(list(MajesticFreeway14))), crs = crs)
+MajesticFreeway13 <- rbind(c(-117.25924, 33.8483),
+                           c(-117.2573, 33.8483),
+                           c(-117.2573, 33.84484),
+                           c(-117.25924, 33.84484),
+                           c(-117.25924, 33.8483))
+MajesticFreewayBP13 <- st_sf(name = 'Majestic Freeway Business Park 13', 
+                             geom = st_sfc(st_polygon(list(MajesticFreeway13))), crs = crs)
+WilsonAveP1 <- rbind(c(-117.21294, 33.82861),
+                     c(-117.21018, 33.82866),
+                     c(-117.2096, 33.82736),
+                     c(-117.21294, 33.82736),
+                     c(-117.21294, 33.82861))
+WilsonAveP <- st_sf(name = 'Wilson Avenue Project', 
+                             geom = st_sfc(st_polygon(list(WilsonAveP1))), crs = crs)
 
 planned215_60 <- rbind(SPerris1, WLC, StoneridgeCC, MValTC, RiderPat, KnoxBPd, KnoxBPe, RamonaGate,
-                       HeacockCC, OLC3, DukeWH, OleanderBP, MapesCC, March1LP,
+                       HeacockCC, OLC3, DukeWH, OleanderBP, MapesCC, March1LP, SeatonPerry,
                        HarvillBC,SeatonCajalcoIP, PerrisCC, HarvillRider, RedlandsAveWestIP, PerrisMorganIPP,
                        PlacentiaLP, RedlandsAveEastIP, MuranakaWP, RamonaIndianWP, MeridianD1Gateway,
                        ramonaBrennanWP, MoValBC, FirstHarleyKI, OperonHKI, HarleyKnoxIP,
-                       EdgemontCC, EdgemontCC_2, Chartwell, Old215BP)
+                       EdgemontCC, EdgemontCC_2, Chartwell, Old215BP, MarlboroughNGLI, Phelan,
+                       MajesticFreewayBP17, MajesticFreewayBP18, MajesticFreewayBP14, MajesticFreewayBP13, WilsonAveP)
+WCUP_narrow <- select(WCUP, name, geom)
+WH_uCons_narrow <- select(WH_uCons, name, geom)
+
+planned215_60 <- bind_rows(planned215_60, WCUP_narrow, WH_uCons_narrow)
 
 leaflet() %>% 
   addTiles() %>% 
@@ -531,18 +597,10 @@ leaflet() %>%
   addPolygons(data = planned215_60,
               color = 'purple',
               weight = 1) %>% 
-  addPolygons(data = WCUP,
-              color = 'purple',
-              weight = 1) %>% 
-  addPolygons(data = WH_uCons,
-              color = 'purple',
-              weight = 1) %>% 
   addPolygons(data = warehouses,
               color= 'red',
               fillOpacity = 0.2,
               weight = 1)
-
-
 
 rm(ls = wcup_RW1, wcup_RW2, wcup_RW3, wcup_RW4,
    wcup_RW5, wcup_RW6, wcup_RW7, WCUP_MW1, WCUP_MW2, WCUP_MW3)
@@ -553,8 +611,17 @@ rm(ls = WCUP1, WCUP2, WCUP3, WCUP4,
 rm(crs, polSC1, polSC2, VB)
 rm(SoCam4, SoCam5, SoCam6,SoCam7, SoCam8)
 rm(SoCam1, SoCam2, SoCam3, SoCamp1, SoCamp2, SoCamp3, SoCamp4, SoCamp5, SoCamp6, SoCamp7, SoCamp8)
-rm(BarkerLog1, BarkerLogistics, DukeWH, DukeWH1, HarvillBC, HarvillBC1, HeacockCC, HeacockCC1)
+rm(DukeWH, DukeWH1, HarvillBC, HarvillBC1, HeacockCC, HeacockCC1)
 rm(KnoxBP1D, KnoxBP1E, KnoxBPd, KnoxBPe, MapesCC, MapesCC1, March1LP, March1LP1, MValTC, MValTC1)
 rm(OleanderBP, OleanderBP1, PerrisCC, PerrisCC1, RiderPat, RiderPat1, SeatonCajalco1, SeatonCajalcoIP, SPerris,SPerris1)
 rm(OLC1, OLC3, RamonaGate, RamonaGate1, StoneridgeCC, Stoneridge1, WLC, WLC_SP )
+rm(Chartwell, Chartwell1, EdgemontCC, EdgemontCC_2, EdgemontCC1, EdgemontCC2, FirstHarleyKI, FirstHarleyKI1)
+rm(HarleyKnoxIP, HarleyKnoxIP1, HarvillRider, HarvillRider1, MarlboroughNGLI, MarlboroughNGLI1, MeridianD1Gateway, MeridianD1Gateway1)
+rm(MoValBC, MoValBC1, MuranakaWP1, MuranakaWP, Old215BP, Old215BP1, Operon1, OperonHKI, PerrisMorganIPP, PerrisMorganIPP1)
+rm(RamonaGate, RamonaGate1, RamonaIndianWP, RamonaIndianWP1, PlacentiaLP, PlacentiaLP1, Phelan, Phelan1)
+rm(ramonaBrennanWP, ramonaBrennanWP1, RedlandsAveEastIP, RedlandsAveEastIP1, RedlandsAveWest, RedlandsAveWestIP)
+rm(MajesticFreeway13, MajesticFreeway14, MajesticFreeway17, MajesticFreeway18)
+rm(MajesticFreewayBP13, MajesticFreewayBP14, MajesticFreewayBP17, MajesticFreewayBP18, SeatonPerry, SeatonPerry1)
+rm(WCUP, WCUP_narrow, WH_uCons, WH_uCons_narrow, WilsonAveP, WilsonAveP1)
+
 #sf::st_write(bloom_proj, 'bloomington.geojson')

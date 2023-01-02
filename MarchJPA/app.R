@@ -10,6 +10,7 @@ library(htmltools)
 library(sf)
 library(tidyverse)
 library(markdown)
+library(leaflet.extras)
 
 
 ## Define UI for application that displays warehouses
@@ -20,7 +21,7 @@ ui <- fluidPage(title = 'RNOW March JPA Warehouse Map',
       fluidRow(column(2, shiny::img(height = 80, src = 'RNOW.jpg')),
                column(4,
                div(style = 'height:40px; font-size: 30px;',
-               'March JPA Warehouse Map')),
+               'Warehouses on the 215/60 Corridor')),
                column(2, shiny::img(height = 80, src = 'RNOW.jpg')))
       ),
   ##Create a tabset display to have a readme file and main warehouse page
@@ -38,17 +39,23 @@ ui <- fluidPage(title = 'RNOW March JPA Warehouse Map',
     )
   )
 )
-  
-  
 
 server <- function(input, output) {
 
-
+#Palettes
+palJuris <- colorFactor(palette = c('red', 'orange', 'brown', 'blue', 'green'), 
+                          domain = c('March JPA', 'Moreno Valley', 'Perris', 'Riverside', 
+                                     'Unincorporated RivCo'))
+palJuris2 <- colorFactor(palette = c('red', 'orange', 'brown', 'blue', 'green'), 
+                        domain = c('MarchJPA', 'Moreno Valley', 'Perris', 'Riverside', 
+                                   'Unincorporated RivCo'))
+                                 
 #Create leaflet map with legend and layers control
   
 output$map <- renderLeaflet({
   leaflet() %>% 
     addTiles() %>% 
+    addProviderTiles(provider = providers$CartoDB.Positron, group = 'Basemap') %>% 
     addProviderTiles(provider = providers$Esri.WorldImagery, 
                      group = 'Imagery') %>% 
     setView(lng = -117.24, lat = 33.875, zoom = 12) %>% 
@@ -65,25 +72,27 @@ output$map <- renderLeaflet({
     addMapPane('Existing Warehouses', zIndex = 410) %>% 
     addMapPane('Planned Warehouses', zIndex = 420) %>% 
     addPolygons(data = jurisdictions,
-                color = ~palJuris(name),
+                color = ~palJuris2(name),
                 stroke = FALSE,
                 fillOpacity = 0.4,
                 label = ~htmlEscape(name),
                 group = 'Jurisdictions',
                 options = pathOptions(pane = 'Jurisdictions')) %>% 
     addLegend(data = warehouses_tidy,
-              pal = palWarehouseJuris,
+              pal = palJuris,
               title = 'Jurisdiction',
               values = ~(jurisdiction))
 })
+
+
 
 #Existing warehouses
 observe({
   leafletProxy("map", data = warehouses_tidy) %>% 
     clearGroup(group = 'Existing warehouses') %>%
     addPolygons(data = warehouses_tidy,
-                color = ~palWarehouseJuris(jurisdiction),
-                fillColor = 'gray',
+                color = ~palJuris(jurisdiction),
+                fillColor = 'gray30',
                 stroke = TRUE,
                 weight = 2,
                 fillOpacity = 0.6,
@@ -95,14 +104,14 @@ observe({
 
 #Planned warehouses
 observe({
-  leafletProxy("map", data = JPA) %>%
+  leafletProxy("map", data = planned_tidy) %>%
     clearGroup(group = 'Planned Warehouses') %>%
-    addPolygons(data = JPA,
-                color = ~palWarehouseJuris(jurisdiction),
-                fillColor = 'gray',
+    addPolygons(data = planned_tidy,
+                color = ~palJuris(jurisdiction),
+                fillColor = 'gray70',
                 stroke = TRUE,
-                weight = 2,
-                fillOpacity = 0.6,
+                weight = 3,
+                fillOpacity = 0.4,
                 group = 'Planned Warehouses',
                 label = ~htmlEscape(paste(name, 
                                           type, round(floorSpace.sq.ft,0), 'sq.ft.')),
@@ -116,12 +125,13 @@ observe({
   leafletProxy("map", data = buff_proj_800) %>%
     clearGroup(group = '800 foot buffer') %>%
     addPolygons(data = buff_proj_800,
-                color = 'grey',
+                color = 'grey70',
                 stroke = FALSE,
-                fillOpacity = 0.7,
+                fillOpacity = 0.2,
                 group = '800 foot buffer',
                 options = pathOptions(pane = '800 foot buffer'))
 })
+
 
 }
 # Run the application 
