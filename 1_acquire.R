@@ -1,10 +1,14 @@
 # March JPA data from County of Riverside
+# Created October 2022
+# Modified December 2022
+# Created by MCM
 
 library(sf)
 library(leaflet)
 library(tidyverse)
 library(htmltools)
 library(leaflet.extras)
+library(googlesheets4)
 
 wd <- getwd()
 MJPA_dir <- paste0(wd, '/boundary/')
@@ -40,28 +44,13 @@ warehouses_narrow <- warehouses %>%
   select(name, type, floorSpace.sq.ft, geom, area ) %>% 
   mutate(jurisdiction = '')
 
-WCUP$shape <- st_area(WCUP)
 
-WCUP <- WCUP %>% 
-  mutate(type = 'WCUP',
-         floorSpace.sq.ft = round(as.numeric(0.5*10.764*shape),0),
-         area = round(as.numeric(10.764*shape), 0)) %>% 
-  select(-shape) 
+shapeArea <- st_area(planned215_60)
 
-WH_uCons$shape <- st_area(WH_uCons)
-
-WH_uCons <- WH_uCons %>% 
-  mutate(type = 'under construction',
-         floorSpace.sq.ft = round(as.numeric(0.5*10.764*shape), 0),
-         area = round(as.numeric(10.764*shape), 0)) %>% 
-  select(-shape) 
-
-JPA <- bind_rows(WCUP, WH_uCons) %>%
-  mutate(jurisdiction = 
-           case_when(
-             name == 'Sycamore Canyon 1' ~ 'Riverside',
-             name == 'Sycamore Canyon 2' ~ 'Riverside',
-             TRUE ~ 'MarchJPA')) #%>%
+planned <- planned215_60 %>% 
+  mutate(type = 'Planned',
+         floorSpace.sq.ft = round(as.numeric(0.5*10.764*shapeArea),0),
+         footprint =        round(as.numeric(1*10.764*shapeArea), 0)) 
 
 MJPA2 <- st_union(MJPA) %>% 
   st_transform("+proj=longlat +ellps=WGS84 +datum=WGS84")
@@ -97,7 +86,7 @@ jurisdictions <- cities %>%
 rm(ls = MJPA, MJPA2, MJPA3, RivCO_cdp, Unincorp_RivCo1, Unincorp_RivCo2, cities)
 
 juris_warehouses <-  warehouses_narrow %>% 
-  st_intersects(jurisdictions)
+  st_intersects(jurisdictions, sparse = TRUE)
 
 for(i in 1:length(juris_warehouses)) {
   print(juris_warehouses[[i]])
@@ -118,9 +107,9 @@ warehouses_tidy <- warehouses_narrow %>%
            case_when(
              name == '297080015' ~ 'Unincorporated RivCo',
              name == '297080016' ~ 'Unincorporated RivCo',
-             name == '297100095' ~ 'MarchJPA',
-             name == '297160005' ~ 'MarchJPA',
-             name == '297200004' ~ 'MarchJPA',
+             name == '297100095' ~ 'March JPA',
+             name == '297160005' ~ 'March JPA',
+             name == '297200004' ~ 'March JPA',
              name == '294180055' ~ 'Perris',
              name == '294180031' ~ 'Perris',
              name == '294190080'~ 'Perris',
@@ -128,26 +117,43 @@ warehouses_tidy <- warehouses_narrow %>%
              name == '291020023'~ 'Moreno Valley',
              TRUE ~ jurisdiction
            )) %>% 
-  arrange(jurisdiction)
+  arrange(jurisdiction) %>% 
+  mutate(jurisdiction = ifelse(jurisdiction == 'MarchJPA', 'March JPA', jurisdiction))
 
-buff_proj_1000 <- JPA %>% 
+March215_60_sheet <- read_sheet('https://docs.google.com/spreadsheets/d/1u7JJYoxl5lE-oXJHEt5kqICmLug6SDh5sYSrSNud7Cs/edit#gid=0',
+                                sheet = 'March215_60') %>% 
+  janitor::clean_names()
+
+planned215_60_full <- planned215_60 %>% 
+  full_join(March215_60_sheet, by = c('name' = 'building_id')) %>% 
+  rename(buildingID = 'name', project_size_sq_ft = size_sq_ft) %>% 
+  select(-x14, -jurisdiction_enviro_docs)
+
+
+shapeArea <- st_area(planned215_60_full)
+
+planned_tidy <- planned215_60_full %>% 
+  mutate(type = 'Planned',
+         area =  round(as.numeric(10.764*shapeArea), -3)) %>% 
+  mutate(floorSpace.sq.ft = 0.5*area) %>% 
+  select(buildingID, type, floorSpace.sq.ft, area, jurisdiction, geom) %>% 
+  rename(name = buildingID)
+
+names(planned_tidy)
+names(warehouses_tidy)
+buff_proj_1000 <- planned_tidy %>% 
   rbind(warehouses_tidy) %>% 
   st_buffer(dist = 304)
 
-buff_proj_800 <- JPA %>%
+buff_proj_800 <- planned_tidy %>%
   rbind(warehouses_tidy) %>% 
   st_buffer(dist = 243.8)
 
-receptors <- sf::st_read(dsn = city_receptors)
-leaflet() %>% 
-  addTiles() %>% 
-  addWebGLHeatmap(data = receptors, size = 200, units = 'm',
-                  opacity = 0.3, intensity = 1)
 
 
-palJuris <- colorFactor(palette = c('red', 'orange', 'brown', 'blue', 'gold'), 
+palJuris <- colorFactor(palette = c('red', 'orange', 'brown', 'blue', 'green', 'yellow'), 
                         domain = jurisdictions$name)
-palWarehouseJuris <- colorFactor(palette = c('red', 'orange', 'brown', 'blue', 'gold'), 
+palWarehouseJuris <- colorFactor(palette = c('red', 'orange', 'brown', 'blue', 'green', 'yellow'), 
                                  domain = warehouses_tidy$jurisdiction)
 leaflet() %>% 
   addTiles() %>% 
@@ -158,8 +164,7 @@ leaflet() %>%
                    overlayGroups = c('Jurisdictions', 
                                      'Existing Warehouses',
                                      'Planned Warehouses',
-                                     '800 foot buffer',
-                                     'Residential'),
+                                     '800 foot buffer'),
                    options = layersControlOptions(collapsed = FALSE)
                    ) %>% 
   hideGroup(c('800 foot buffer', 'Jurisdictions')) %>% 
@@ -189,7 +194,7 @@ leaflet() %>%
               label = ~htmlEscape(paste(jurisdiction, name, 
                 type, floorSpace.sq.ft, 'sq.ft.')),
               options = pathOptions(pane = 'Existing Warehouses')) %>% 
-  addPolygons(data = JPA,
+  addPolygons(data = planned_tidy,
               color = ~palWarehouseJuris(jurisdiction),
               stroke = TRUE,
               weight = 2,
@@ -205,7 +210,7 @@ leaflet() %>%
             values = ~(jurisdiction))
 
 rm(ls = warehouses_narrow, juris_warehouses, warehouses, WCUP, bloom_proj, WH_uCons)
-
+rm(ls = receptors)
 setwd(wd)
 save.image('.RData')
 setwd(app_dir)
