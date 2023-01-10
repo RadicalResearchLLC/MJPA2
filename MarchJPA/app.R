@@ -11,6 +11,7 @@ library(sf)
 library(tidyverse)
 library(markdown)
 library(leaflet.extras)
+library(DT)
 
 
 ## Define UI for application that displays warehouses
@@ -28,9 +29,11 @@ ui <- fluidPage(title = 'RNOW March JPA Warehouse Map',
   tabsetPanel(
     tabPanel('Dashboard',
     # Display slider bar selections, checkbox, and summary text
+    fluidRow(column(width = 10, dataTableOutput('sumJuris'))),
     fluidRow(
         column(width = 10, align = 'center', leafletOutput("map", height = 700))
-        )
+        ),
+    fluidRow(column(width = 10, align = 'center', dataTableOutput('PlannedWH')))
       ),
     tabPanel('Readme',
       div(style = 'width: 90%; margin: auto;',
@@ -132,6 +135,32 @@ observe({
                 options = pathOptions(pane = '800 foot buffer'))
 })
 
+output$PlannedWH <- DT::renderDataTable(
+  table4app,
+  server = FALSE,
+  caption  = 'Planned and approved warehouses',
+  rownames = FALSE, 
+  escape = FALSE,
+  options = list(dom = 'Btp',
+                 pageLength = 15,
+                 buttons = c('csv','excel')),
+  extensions = c('Buttons'),
+  filter = list(position = 'top', clear = FALSE)
+)
+
+output$sumJuris <- DT::renderDataTable({
+
+  DT::datatable(summaryTable,  
+  caption  = 'This interactive map shows the warehouses along the 215/60 corridor jurisdictions. The summary table provides statistics on current and planned growth by jurisdiction. Note that warehouse complexes like the World Logistics Center and Stoneridge Commerce Center will have many warehouses but are currently estimated as a single warehouse. Please see Readme tab for more information on methods and data sources.',
+  rownames = FALSE, 
+  options = list(dom = '') 
+  ) %>% 
+    formatStyle(
+      0,
+      target = "row",
+      backgroundColor = styleRow(1,'orange')
+      )
+}, server = FALSE)
 
 }
 # Run the application 

@@ -209,8 +209,49 @@ leaflet() %>%
             title = 'Jurisdiction',
             values = ~(jurisdiction))
 
+table4app <- planned215_60_full %>% 
+  st_set_geometry(value = NULL) %>% 
+  select(project, buildingID, project_size_sq_ft, jurisdiction, stage_pending_approved, 
+         developer, year, docs) %>%
+  arrange(desc(project_size_sq_ft)) %>% 
+  rename('project size (sq.ft.)' = project_size_sq_ft, 'CEQA step/type' = stage_pending_approved) %>% 
+  mutate(link = paste0('<a href=', docs, '>', 'Enviromental document', '</a>')) %>% 
+  select(-docs) #%>% 
+
+JurisdictionTotals <- warehouses_tidy %>% 
+  st_set_geometry(value=NULL) %>% 
+  group_by(jurisdiction) %>% 
+  summarize(number = n(), footprint = round(sum(area), -5))
+
+plannedTotals <- planned215_60_full %>% 
+  st_set_geometry(value = NULL) %>% 
+  mutate(footprint = round(as.numeric(1*10.764*shapeArea), 0)) %>% 
+  select(jurisdiction, footprint) %>% 
+  group_by(jurisdiction) %>% 
+  summarize(planned.number = n(), planned.footprint = round(sum(footprint), -5))
+
+summaryTable <- full_join(JurisdictionTotals, plannedTotals) %>% 
+  mutate(total.Number = number + planned.number, 
+         total.Footprint = footprint + planned.footprint)
+
+summarySummary <- summaryTable %>% 
+  summarize(number = sum(number), footprint = sum(footprint),
+            planned.number = sum(planned.number), planned.footprint = sum(planned.footprint),
+            total.Number = sum(total.Number), total.Footprint = sum(total.Footprint),
+            .groups = 'drop') %>% 
+  mutate(jurisdiction = 'March 215/60 Corridor Total')
+
+summaryTable <- bind_rows(summaryTable, summarySummary) %>% 
+  arrange(desc(total.Footprint)) %>% 
+  rename('Current warehouse count' = number, 
+         'Current warehouse footprint (sq.ft.)' = footprint,
+         'Planned warehouse count' = planned.number,
+         'Planned warehouse footprint (sq.ft.)' = planned.footprint,
+         'Future warehouse count' = total.Number,
+         'Future warehouse footprint (sq.ft.)' = total.Footprint)
+  
 rm(ls = warehouses_narrow, juris_warehouses, warehouses, WCUP, bloom_proj, WH_uCons)
-rm(ls = receptors)
+rm(ls = receptors, summarySummary, plannedTotals)
 setwd(wd)
 save.image('.RData')
 setwd(app_dir)
