@@ -216,11 +216,50 @@ wcup_RW6 <- rbind(c(-117.307383, 33.903533),
                   c(-117.307383, 33.903533))
 
 wcup_RW7 <- rbind(c(-117.308938, 33.903533),
-                  c(-117.310932, 33.903533),
-                  c(-117.310932, 33.901235),
+                  c(-117.3106, 33.903533),
+                  c(-117.3106, 33.901235),
                   c(-117.308938, 33.901235),
                   c(-117.308938, 33.903533))
-
+wcup_MU1 <- rbind(c(-117.313576, 33.91093),
+                  c(-117.31271, 33.91093),
+                  c(-117.31271, 33.9106),
+                  c(-117.31228, 33.9104),
+                  c(-117.31225, 33.90939),
+                  c(-117.31245, 33.9088),
+                  c(-117.3138, 33.9089),
+                  c(-117.3137, 33.90931),
+                  c(-117.313576, 33.91093))
+wcup_MU2 <- rbind(c(-117.3138, 33.9089),
+                  c(-117.31245, 33.9088),
+                  c(-117.3126, 33.9082),
+                  c(-117.3126, 33.9074),
+                  c(-117.3132, 33.9074),
+                  c(-117.3142, 33.9075),
+                  c(-117.3138, 33.9089))
+wcup_MU3 <- rbind(c(-117.3142, 33.90735),
+                  c(-117.3132, 33.9073),
+                  c(-117.3126, 33.9073),
+                  c(-117.3126, 33.90517),
+                  c(-117.315, 33.90479),
+                  c(-117.3152, 33.90605),
+                  c(-117.3142, 33.90735))
+wcup_MU4 <- rbind(c(-117.315, 33.90479),
+                  c(-117.3126, 33.90517),
+                  c(-117.3126, 33.90374),
+                  c(-117.31217, 33.9029),
+                  c(-117.31389, 33.90264),
+                  c(-117.31418, 33.90324),
+                  c(-117.315, 33.90479))
+wcup_MU5 <- rbind(c(-117.3124, 33.903533),
+                  c(-117.31098, 33.903533),
+                  c(-117.31098, 33.901235),
+                  c(-117.31116, 33.901235),
+                  c(-117.3124, 33.903533))
+wcup_MU6 <- rbind(c(-117.307383, 33.903533),
+                  c(-117.307383, 33.9015),
+                  c(-117.305518, 33.903533),
+                  c(-117.307383, 33.903533))
+                  
 WCUP1 <- st_sf(name = 'West Campus Mega 1', geom = st_sfc(st_polygon(list(WCUP_MW1))), crs = crs)
 WCUP2 <- st_sf(name = 'West Campus Mega 2', geom = st_sfc(st_polygon(list(WCUP_MW2))), crs = crs)
 WCUP3 <- st_sf(name = 'West Campus Mega 3', geom = st_sfc(st_polygon(list(WCUP_MW3))), crs = crs)
@@ -231,13 +270,22 @@ WCUP7 <- st_sf(name = 'West Campus reg 4', geom = st_sfc(st_polygon(list(wcup_RW
 WCUP8 <- st_sf(name = 'West Campus reg 5', geom = st_sfc(st_polygon(list(wcup_RW5))), crs = crs)
 WCUP9 <- st_sf(name = 'West Campus reg 6', geom = st_sfc(st_polygon(list(wcup_RW6))), crs = crs)
 WCUP10 <- st_sf(name = 'West Campus reg 7', geom = st_sfc(st_polygon(list(wcup_RW7))), crs = crs)
+WCUPmu1 <- st_sf(name = 'West Campus MixedUse 1', geom = st_sfc(st_polygon(list(wcup_MU1))), crs = crs)
+WCUPmu2 <- st_sf(name = 'West Campus MixedUse 2', geom = st_sfc(st_polygon(list(wcup_MU2))), crs = crs)
+WCUPmu3 <- st_sf(name = 'West Campus MixedUse 3', geom = st_sfc(st_polygon(list(wcup_MU3))), crs = crs)
+WCUPmu4 <- st_sf(name = 'West Campus MixedUse 4', geom = st_sfc(st_polygon(list(wcup_MU4))), crs = crs)
+WCUPmu5 <- st_sf(name = 'West Campus MixedUse 5', geom = st_sfc(st_polygon(list(wcup_MU5))), crs = crs)
+WCUPmu6 <- st_sf(name = 'West Campus MixedUse 6', geom = st_sfc(st_polygon(list(wcup_MU6))), crs = crs)
 
-WCUP <- rbind(WCUP1, WCUP2, WCUP3, WCUP4, WCUP5, WCUP6, WCUP7, WCUP8, WCUP9, WCUP10)
+WCUP <- rbind(WCUP1, WCUP2, WCUP3, WCUP4, WCUP5, WCUP6, WCUP7, WCUP8, WCUP9, WCUP10,
+              WCUPmu1, WCUPmu2, WCUPmu3, WCUPmu4, WCUPmu5, WCUPmu6)
+
+
 
 WLC_SP <- rbind(c(-117.139088, 33.939),
                 c(-117.139116, 33.9353),
                 c(-117.1564, 33.93525),
-                c(-117.15628, 33.92135),
+                c(-117.1562, 33.92135),
                 c(-117.15192, 33.92135),
                 c(-117.15199, 33.91782),
                 c(-117.14506, 33.91761),
@@ -572,6 +620,13 @@ WilsonAveP1 <- rbind(c(-117.21294, 33.82861),
                      c(-117.21294, 33.82861))
 WilsonAveP <- st_sf(name = 'Wilson Avenue Project', 
                              geom = st_sfc(st_polygon(list(WilsonAveP1))), crs = crs)
+MW_B4 <- rbind(c(-117.2916, 33.91375),
+               c(-117.291805, 33.91423),
+               c(-117.29215, 33.91505),
+               c(-117.29344, 33.91486),
+               c(-117.29223, 33.91337),
+               c(-117.2916, 33.91375))
+MWB4 <- st_sf(name = 'Meridian West Bldg 4', geom = st_sfc(st_polygon(list(MW_B4))), crs = 4326)
 
 planned215_60 <- rbind(SPerris1, WLC, StoneridgeCC, MValTC, RiderPat, KnoxBPd, KnoxBPe, RamonaGate,
                        HeacockCC, OLC3, DukeWH, OleanderBP, MapesCC, March1LP, SeatonPerry,
@@ -579,7 +634,8 @@ planned215_60 <- rbind(SPerris1, WLC, StoneridgeCC, MValTC, RiderPat, KnoxBPd, K
                        PlacentiaLP, RedlandsAveEastIP, MuranakaWP, RamonaIndianWP, MeridianD1Gateway,
                        ramonaBrennanWP, MoValBC, FirstHarleyKI, OperonHKI, HarleyKnoxIP,
                        EdgemontCC, EdgemontCC_2, Chartwell, Old215BP, MarlboroughNGLI, Phelan,
-                       MajesticFreewayBP17, MajesticFreewayBP18, MajesticFreewayBP14, MajesticFreewayBP13, WilsonAveP)
+                       MajesticFreewayBP17, MajesticFreewayBP18, MajesticFreewayBP14, MajesticFreewayBP13, WilsonAveP,
+                       MWB4)
 WCUP_narrow <- select(WCUP, name, geom)
 WH_uCons_narrow <- select(WH_uCons, name, geom)
 
@@ -623,5 +679,7 @@ rm(ramonaBrennanWP, ramonaBrennanWP1, RedlandsAveEastIP, RedlandsAveEastIP1, Red
 rm(MajesticFreeway13, MajesticFreeway14, MajesticFreeway17, MajesticFreeway18)
 rm(MajesticFreewayBP13, MajesticFreewayBP14, MajesticFreewayBP17, MajesticFreewayBP18, SeatonPerry, SeatonPerry1)
 rm(WCUP, WCUP_narrow, WH_uCons, WH_uCons_narrow, WilsonAveP, WilsonAveP1)
-
+rm(MW_B4, MWB4)
+rm(wcup_MU1, wcup_MU2, wcup_MU3, wcup_MU4, wcup_MU5, wcup_MU6)
+rm(WCUPmu1, WCUPmu2, WCUPmu3, WCUPmu4, WCUPmu5, WCUPmu6)
 #sf::st_write(bloom_proj, 'bloomington.geojson')

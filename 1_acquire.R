@@ -1,6 +1,6 @@
 # March JPA data from County of Riverside
 # Created October 2022
-# Modified December 2022
+# Modified February 2023
 # Created by MCM
 
 library(sf)
@@ -30,7 +30,10 @@ cities <- read_sf(dsn = cities_dir)  %>%
 
 RivCO_cdp <- read_sf(dsn = 'C:/Dev/MJPA2/RivCo_CDP/Census_2010_Designated_Places.geojson') %>% 
   st_transform("+proj=longlat +ellps=WGS84 +datum=WGS84") %>% 
-  filter(PLACE_NAME %in% c('Mead Valley', 'March ARB'))  
+  filter(PLACE_NAME %in% c('Mead Valley', 'March ARB', 'Woodcrest',
+                           'Good Hope', 'Lake Mathews', 'El Sobrante',
+                           'Meadowbrook', 'Lakeview', 'Nuevo', 'Romoland', 
+                           'Homeland', 'Highgrove'))  
 
 WH.url <- 'https://raw.githubusercontent.com/RadicalResearchLLC/WarehouseMap/main/WarehouseCITY/geoJSON/finalParcels.geojson'
 warehouses <- st_read(WH.url) %>% 
@@ -38,10 +41,10 @@ warehouses <- st_read(WH.url) %>%
   filter(county == 'Riverside')
 
 warehouses_narrow <- warehouses %>% 
-  select(apn, geometry, floorSpace.sq.ft, shape_area) %>% 
+  select(apn, geometry, floorSpace.sq.ft, shape_area, year_built) %>% 
   rename(name = apn, geom = geometry, area = shape_area) %>% 
   mutate(type = 'existing') %>% 
-  select(name, type, floorSpace.sq.ft, geom, area ) %>% 
+  select(name, type, floorSpace.sq.ft, geom, area, year_built) %>% 
   mutate(jurisdiction = '')
 
 
@@ -115,20 +118,30 @@ warehouses_tidy <- warehouses_narrow %>%
              name == '294190080'~ 'Perris',
              name == '294210060'~ 'Perris',
              name == '291020023'~ 'Moreno Valley',
+             name == '247170022' ~ 'Riverside',
+             name == '255120036'~ 'Riverside',
+             name == '255120014'~ 'Riverside',
+             name == '257240002'~ 'Riverside',
+             name == '257240001'~ 'Riverside',
              TRUE ~ jurisdiction
            )) %>% 
   arrange(jurisdiction) %>% 
   mutate(jurisdiction = ifelse(jurisdiction == 'MarchJPA', 'March JPA', jurisdiction))
+
+
+missingMoVal <- sf::st_read('C:/Dev/MJPA2/jurisdictions/moValmissing.geojson') %>% 
+  select(Name, geometry) %>% 
+  rename(geom = geometry, name = Name)
 
 March215_60_sheet <- read_sheet('https://docs.google.com/spreadsheets/d/1u7JJYoxl5lE-oXJHEt5kqICmLug6SDh5sYSrSNud7Cs/edit#gid=0',
                                 sheet = 'March215_60') %>% 
   janitor::clean_names()
 
 planned215_60_full <- planned215_60 %>% 
+  bind_rows(missingMoVal) %>% 
   full_join(March215_60_sheet, by = c('name' = 'building_id')) %>% 
   rename(buildingID = 'name', project_size_sq_ft = size_sq_ft) %>% 
   select(-x14, -jurisdiction_enviro_docs)
-
 
 shapeArea <- st_area(planned215_60_full)
 
@@ -137,19 +150,16 @@ planned_tidy <- planned215_60_full %>%
          area =  round(as.numeric(10.764*shapeArea), -3)) %>% 
   mutate(floorSpace.sq.ft = 0.5*area) %>% 
   select(buildingID, type, floorSpace.sq.ft, area, jurisdiction, geom) %>% 
-  rename(name = buildingID)
+  rename(name = buildingID) %>% 
+  mutate(year_built = '2025')
+
 
 names(planned_tidy)
 names(warehouses_tidy)
-buff_proj_1000 <- planned_tidy %>% 
-  rbind(warehouses_tidy) %>% 
-  st_buffer(dist = 304)
 
 buff_proj_800 <- planned_tidy %>%
   rbind(warehouses_tidy) %>% 
   st_buffer(dist = 243.8)
-
-
 
 palJuris <- colorFactor(palette = c('red', 'orange', 'brown', 'blue', 'green', 'yellow'), 
                         domain = jurisdictions$name)
