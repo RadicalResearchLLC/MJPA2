@@ -1,8 +1,8 @@
 ## This is an alpha version of March JPA warehouse map, a community mapping tool for warehouse impacts
 ## Authored by Mike McCarthy, Radical Research LLC
 ## First created September, 2022
-## Last modified Novemober, 2022
-#
+## Last modified February, 2023
+
 
 library(shiny)
 library(leaflet)
@@ -69,7 +69,7 @@ output$map <- renderLeaflet({
                                        '800 foot buffer'),
                      options = layersControlOptions(collapsed = FALSE)
     ) %>% 
-    hideGroup(c('800 foot buffer', 'Jurisdictions')) %>% 
+    hideGroup(c('Jurisdictions', '800 foot buffer')) %>% 
     addMapPane('Jurisdictions', zIndex = 390) %>% 
     addMapPane('800 foot buffer', zIndex = 395) %>% 
     addMapPane('Existing Warehouses', zIndex = 410) %>% 
